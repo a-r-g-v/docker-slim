@@ -1,0 +1,32 @@
+server {
+  listen 80;
+  root /problem/public_html;
+  index index.php;
+  server_name _;
+
+  location / {
+    try_files $uri $uri/ /index.php?$args;
+
+  }
+  location ~ \.php$ {
+    index index.php;
+    fastcgi_keep_conn on;
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  index.php $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+    if (!-e $request_filename){
+      rewrite ^(.*)$ /index.php break;
+    }
+
+  }
+
+  location ~ /\.ht {
+    deny all;
+  }
+
+}
+
+
+
+
